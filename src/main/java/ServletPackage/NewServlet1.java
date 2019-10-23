@@ -7,25 +7,22 @@ package ServletPackage;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import simplejdbc.CustomerEntity;
 import simplejdbc.DAO;
+import simplejdbc.DAOException;
 import simplejdbc.DataSourceFactory;
 
 /**
  *
  * @author pedago
  */
-@WebServlet(name = "NewServlet", urlPatterns = {"/NewServlet"})
-public class NewServlet extends HttpServlet {
+@WebServlet(name = "NewServlet1", urlPatterns = {"/NewServlet1"})
+public class NewServlet1 extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,50 +41,30 @@ public class NewServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");            
+            out.println("<title>CC CV ?</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            out.println("<table>");
-            out.println("<tr>");
-            out.println("<th> Id </th>");
-            out.println("<th> name : </th>");
-            out.println("<th> address </th>");
-            out.println("</tr>");
-            out.println("<style type=\"text/css\">table, th, td {\n" +"  border: 1px solid black;\n" +"} </style>");
-            try {   // Trouver la valeur du paramètre HTTP customerID
-                String val = request.getParameter("state");
-                
-                // on doit convertir cette valeur en entier (attention aux exceptions !)
-                
-                
-                DAO dao = new DAO(DataSourceFactory.getDataSource());
-                List<CustomerEntity> cust = dao.customersInState(val);
-                // Afficher les propriétés du client
-                
-                for (int i=0;i<cust.size();i++){
-                    out.println("<tr>");
-                    out.printf("<td> %d </td> <td> %s </td> <td> %s </td> <br>",
-                    cust.get(i).getCustomerId(),
-                    cust.get(i).getName(),
-                    cust.get(i).getAddressLine1());
-                    out.println("</tr>");
+           try {
+               
+               DAOextend dao = new DAOextend(DataSourceFactory.getDataSource());
+               List<String> list = dao.GetState();
+                out.println("<form action=\"/TP8/NewServlet\" id=\"slt\">");
+                out.println("<select name=\"state\" form=\"slt\">");
+                for (int i = 0;i<list.size();i++){
+                    out.printf("<option value=%s> %s </option>",
+                    list.get(i), list.get(i));
                 }
-            out.println("</table>");
-            } catch (Exception e) {
-                out.printf("Erreur : %s", e.getMessage());
-            }
-            out.printf("<hr><a href='%s'>Retour au menu</a>", request.getContextPath()+"/NewServlet1");
+            out.println("</select>");
+            out.println("<input type=\"submit\" value=\"Submit\" >");
+            out.println("</form>");
+            
+           } catch (Exception e){
+               
+           }
             out.println("</body>");
             out.println("</html>");
-        } catch (Exception ex) {
-            Logger.getLogger("servlet").log(Level.SEVERE, "Erreur de traitement", ex);
         }
     }
-        
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
